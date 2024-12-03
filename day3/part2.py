@@ -1,23 +1,14 @@
 import re
 FILE = open("input").read()
-
-pattern = re.compile(r'mul\([0-9]+,[0-9]+\)|do\(\)|don\'t\(\)')
-pattern2 = re.compile(r'mul\(([0-9]+),([0-9]+)\)')
-
 s = 0
 do = 1
-
-for x in re.findall(pattern, FILE):
-    if 'mul(' in x:
-        for (a, b) in re.findall(pattern2, x):
-            print(f"mul({a},{b})")
-            s = s + do*int(a)*int(b)
-    elif 'do(' in x:
+for m in re.findall(r'mul\((\d+),(\d+)\)|(do)\(\)|(don\'t)\(\)', FILE):
+    print(m)
+    if m[0] and m[1]:
+        s = s + do*int(m[0])*int(m[1])
+    elif m[2]:
         do = 1
-        print(x)
-    elif 'don\'t(' in x:
+    elif m[3]:
         do = 0
-        print(x)
 
 print(s)
-
