@@ -12,7 +12,9 @@ First I tried doing the code variation using matrix transformations.
 This was too hard so I rewrote the code to use simple two dimensional array lookup.
 
 Problem on first part was also checking all possible array index violations.
-However I found a simple and concise way checking for them.
+However I found a simple and concise way checking only the worst case.
 Array bounds checking was no problem on the second part because the search was
 symmetrical and to avoid index violations the input could be changed.
+
+Part 2 was definitely simpler than part 1.
 
