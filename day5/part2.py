@@ -1,77 +1,42 @@
 from collections import defaultdict
-import sys
+import functools
 
-lines = open(0).read().splitlines()
+file = open(0) # file object simplifies parsing of sectioned data file
 
-print(lines)
-
-order = defaultdict(list)
+order = defaultdict(list) # creates an empty list by default
 updates = []
-i = 0
-for line in lines:
-    if line == '':
-        i+=1
-        continue
+for line in file:
+    if line.isspace():
+        break
+    o = list(map(int, line.split('|'))) # ATTENTION: map to int ASAP
+    order[o[0]].append(o[1])
 
-    if i == 0:
-        o = line.split('|')
-        order[o[0]].append(o[1])
+for line in file:
+    updates.append(list(map(int, line.split(',')))) # ATTENTION: map to int ASAP
+
+def is_ordered(update):
+    for i, first in enumerate(update):
+        for after in update[i+1:]:
+            if after not in order[first]:
+                return False
+    return True
+
+# rational for return values:
+# the default comparison function for two integers is (x-y)
+# now (x-y) returns -1 if the integers are in order, respectively 1 if they
+# are not in order, and 0 if they are the same!
+def compare(x,y):
+    if x not in order:
+        return 0 # same order
+    if y in order[x]:
+        return -1 # in order
     else:
-        updates.append(line.split(','))
-
-
-print(order)
-print(updates)
-
-ok = []
-
-def check(update):
-    valid = 0
-    was_wrong = 0
-
-    while (valid == 0):
-        found_error = 0
-        for i, page in enumerate(update):
-            valid = 0
-            o = order[page]
-
-            after = update[(i+1):]
-            #print(page)
-            #print(after)
-
-            for j, a in enumerate(after):
-                if a in o:
-                    pass
-                else:
-                    print(f"fail {page} {after} {a}")
-                    print(update)
-                    tmp = a
-                    del(update[i+j+1])
-                    update.insert(i,tmp)
-                    print(update)
-                    found_error = 1
-                    was_wrong = 1
-                    break
-            if (found_error == 0):
-                print("valid")
-                valid = 1
-            else:
-                print(f"breaking {valid=}")
-                break
-
-    if (was_wrong == 1):
-        print("ok")
-        print(update)
-        ok.append(update)
-
-
-for update in updates:
-    check(update)
-
-print(ok)
+        return 1 # not in order
+    return 
 
 t = 0
-for o in ok:
-    t += int(o[len(o)//2])
-
+for update in updates:
+    if (not is_ordered(update)):
+        update.sort(key=functools.cmp_to_key(compare))
+        t += int(update[len(update)//2])
 print(t)
