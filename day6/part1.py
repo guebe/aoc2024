@@ -30,9 +30,9 @@ def turn_right(direction):
     elif direction == 'v':
         return '<'
 
-direction = grid[pos[0]][pos[1]] # initial direction
 visited = set() # store visited positions
 
+direction = grid[pos[0]][pos[1]] # initial direction
 while(True):
     delta = get_delta(direction)
     new = (pos[0]+delta[0],pos[1]+delta[1])

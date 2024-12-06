@@ -1,95 +1,66 @@
+grid = list(map(list, open(0).read().splitlines()))
 
-a = open(0).read().splitlines()
+ROW = len(grid)
+COL = len(grid[0])
 
+# determine initial position
 pos = 0
-
-ROW = len(a)
-COL = len(a[0])
-
 for r in range(ROW):
     for c in range(COL):
-        if "^" == a[r][c]:
+        if "^" == grid[r][c]:
             pos = (r, c)
 
-guard = a[pos[0]][pos[1]]
+def get_delta(direction):
+    if direction == '^':
+        return (-1,0)
+    elif direction == '>':
+        return (0,1)
+    elif direction == '<':
+        return (0,-1)
+    elif direction == 'v':
+        return (1,0)
 
-def get_delta(guard):
-    if guard == '^':
-        delta=(-1,0)
-    if guard == '>':
-        delta=(0,1)
-    if guard == '<':
-        delta=(0,-1)
-    if guard == 'v':
-        delta=(1,0)
-    return delta
-
-def turn_right(guard):
-    if guard == '^':
+def turn_right(direction):
+    if direction == '^':
         return '>'
-    if guard == '>':
+    elif direction == '>':
         return 'v'
-    if guard == '<':
+    elif direction == '<':
         return '^'
-    if guard == 'v':
+    elif direction == 'v':
         return '<'
 
-delta=get_delta(guard)
-import sys
-
-t=0
-
-path = set() # set for unique visited path
-initial_pos = pos
-initial_guard = guard
-
-while(True):
-    npos = (pos[0]+delta[0],pos[1]+delta[1])
-    if npos[0] >= ROW or npos[1] >= COL or npos[1] < 0 or npos[0] < 0:
-        break
-    if "#" == a[npos[0]][npos[1]]:
-        guard = turn_right(guard) # direction
-        delta=get_delta(guard)
-    else:
-        pos = npos
-        path.add(pos)
-        t += 1
-
-print(len(path))
-
-def is_endless(a, pos, guard):
-    path_and_dir = set() # set to detect if we have endless loop
-    delta=get_delta(guard)
+def is_endless(grid, pos, visited=None):
+    direction = grid[pos[0]][pos[1]] # initial direction
+    visited_direction = set() # set to detect if we have endless loop
     while(True):
-        npos = (pos[0]+delta[0],pos[1]+delta[1])
-        if npos[0] >= ROW or npos[1] >= COL or npos[1] < 0 or npos[0] < 0:
-            return False
-        if "#" == a[npos[0]][npos[1]]:
-            guard = turn_right(guard) # direction
-            delta=get_delta(guard)
+        delta = get_delta(direction)
+        new = (pos[0]+delta[0],pos[1]+delta[1])
+        if new[0] >= ROW or new[1] >= COL or new[0] < 0 or new[1] < 0:
+            return False # left grid
+        elif (new, direction) in visited_direction:
+            return True # endless loop
+        elif "#" == grid[new[0]][new[1]]:
+            direction = turn_right(direction) # turn
         else:
-            if (npos, guard) in path_and_dir:
-                return True
-            pos = npos
-            path_and_dir.add((pos, guard))
+            visited_direction.add((new, direction))
+            if (visited is not None): visited.add(new)
+            pos = new # move in current direction
 
-t2 = 0
-for modi in path:
-    a_trie = a.copy()
-    x, y = modi[0], modi[1]
-    line = a_trie[x]
-    a_trie[x] = line[:y] + '#' + line[y + 1:] # modify line
-    
-    if (is_endless(a_trie, initial_pos, initial_guard)):
-        #for line in a_trie:
-        #    print(line)
-        #print()
-        t2 += 1
+visited = set() # store visited positions
+assert is_endless(grid, pos, visited) == False
+print(len(visited))
 
-print(t2)
+# remove guards starting position - this is not allowed
+visited.remove(pos)
 
+# add wall on all previously visited paths
+t = 0
+for r, c in visited:
+    grid[r][c] = '#' # modify line
+    if (is_endless(grid, pos)):
+        t += 1
+    grid[r][c] = '.' # change back
 
-
-
-
+print(t)
 
