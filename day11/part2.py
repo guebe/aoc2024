@@ -6,17 +6,12 @@ stones = list(map(int,open(0).readline().strip().split(' ')))
 # _and_ 48 counted 4 times. Thus += value _and_ = value is important.
 #
 # In other words this function compresses stones and helps to keep the
-# list small.
-def inc_or_set(mylist, key, value):
-    found = False
-    for i in range(len(mylist)):
-        k, v = mylist[i]
-        if k == key:
-            mylist[i] = (k, v+value)
-            found = True
-            break
-    if not found:
-        mylist.append((key, value))
+# dictionary small.
+def inc_or_set(dictionary, key, value):
+    if key not in dictionary:
+        dictionary[key] = value
+    else:
+        dictionary[key] += value
 
 # trivial function to split a stone.
 # precondition: ATTENTION: Only call this function if you ought to
@@ -29,16 +24,16 @@ def splitstone(stone):
     return (stone1, stone2)
 
 # count unique stones
-counter = []
+counter = {}
 for stone in stones:
     inc_or_set(counter, stone, 1) # initially each stone is counted once, but we may have duplicates - which are compressed by this function
 
 print(counter)
 
 for i in range(75):
-    new = []
+    new = {}
     print(f"at {i}")
-    for stone, count in counter:
+    for stone, count in counter.items():
         if stone == 0:
             inc_or_set(new, 1, count)
         elif len(str(stone)) % 2 == 0:
@@ -52,7 +47,7 @@ for i in range(75):
 
 print(len(counter))
 total = 0
-for stone, count in counter:
+for stone, count in counter.items():
     total += count
 
 print(total)
