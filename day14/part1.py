@@ -25,15 +25,10 @@ for line in lines:
     hx = cols//2
     hy = rows//2
     x, y = p
-    if x != hx and y != hy:
-        if x < hx and y < hy:
-            q1+=1
-        if x < hx and y > hy:
-            q2+=1
-        if x > hx and y < hy:
-            q3+=1
-        if x > hx and y > hy:
-            q4+=1
+    if x < hx and y < hy: q1+=1
+    if x < hx and y > hy: q2+=1
+    if x > hx and y < hy: q3+=1
+    if x > hx and y > hy: q4+=1
     #print(f"{p}")
 
 print(q1*q2*q3*q4)
