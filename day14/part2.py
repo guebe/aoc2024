@@ -62,20 +62,9 @@ for i in range(10000000):
 
     points = tmp
     score = ebe_score(points)
-    print(f"{i} {score}")
-    if (score > 250):
+    print(f"{i+1} {score}")
+    if (score > 300):
         vis(i)
+        break
 
-    if (i == 100):
-        q1,q2,q3,q4=(0,0,0,0)
-        hx = cols//2
-        hy = rows//2
-        x, y = p
-        if x < hx and y < hy: q1+=1
-        if x < hx and y > hy: q2+=1
-        if x > hx and y < hy: q3+=1
-        if x > hx and y > hy: q4+=1
-        print(q1*q2*q3*q4)
-
-# ATTENTION: the number you get is too low by one - I increased it manually after not getting the star!
 
