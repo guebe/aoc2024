@@ -5,7 +5,7 @@ field, dirs = lines.split('\n\n')
 field = field.split('\n')
 dirs = ''.join(dirs.strip('\n').split('\n'))
 
-boxes = set()
+boxes = dict()
 walls = set()
 robot = None
 cols = len(field[0].strip('\n'))*2
@@ -16,8 +16,8 @@ for y,line in enumerate(field):
         if char == '.':
             pass
         elif char == 'O':
-            boxes.add((x*2,y))
-            boxes.add((x*2+1,y))
+            boxes[(x*2,y)] = '['
+            boxes[(x*2+1,y)] = ']'
         elif char == '#':
             walls.add((x*2,y))
             walls.add((x*2+1,y))
@@ -39,46 +39,63 @@ def dbg():
     for y in range(rows):
         for x in range(cols):
             if (x,y) in walls:
-                print('#', end='')
+                print(f'#', end='')
             elif (x,y) == robot:
                 print('@', end='')
             elif (x,y) in boxes:
-                print('O', end='')
+                print(f'{boxes[(x,y)]}', end='')
             else:
-                print('.', end='')
+                print(' ', end='')
         print()
     print()
 
 print("Initial state:")
 dbg()
 
-for d in dirs:
+for iii,d in enumerate(dirs):
     assert d in directions
     dx,dy = directions[d]
 
     todo = []
-    np = robot
+    tryo = [robot]
     do_move = False
     while True:
-        np = (np[0]+dx,np[1]+dy)
-        if np in walls:
+        if any((np[0]+dx,np[1]+dy) in walls for np in tryo):
             do_move = False
+            #print("walled")
             break
-        elif np in boxes:
-            todo.append(np)
-        else: # empty space
+        elif any((np[0]+dx,np[1]+dy) in boxes for np in tryo):
+            nps = set()
+            for np in tryo:
+                nps.add((np[0]+dx,np[1]+dy))
+                if d == '^' or d == 'v':
+                    if boxes.get((np[0]+dx,np[1]+dy)) == '[':
+                        nps.add((np[0]+dx+1,np[1]+dy))
+                    elif boxes.get((np[0]+dx,np[1]+dy)) == ']':
+                        nps.add((np[0]+dx-1,np[1]+dy))
+            for np in nps:
+                if np in boxes:
+                    todo.append((np,boxes[np]))
+            tryo = nps
+            #print(f"{tryo=}")
+            #print(f"{todo=}")
+        else: # all empty space
             do_move = True
+            #print(f"all empty")
             break
 
     if do_move:
         robot = (robot[0]+dx,robot[1]+dy)
-        for box in todo:
-            boxes.remove(box)
-        for box in todo:
-            boxes.add((box[0]+dx,box[1]+dy))
+        assert len(todo)%2 == 0
+        for box, v in todo:
+            del boxes[box]
+        for box, v in todo:
+            boxes[(box[0]+dx,box[1]+dy)] = v
 
-    print(f"Move {d}:")
-    dbg()
+    if len(todo) > 0:
+        print(f"Move {d} {iii}:")
+        print(todo)
+        dbg()
 
 print("FINISH")
 dbg()
