@@ -56,37 +56,45 @@ for iii,d in enumerate(dirs):
     assert d in directions
     dx,dy = directions[d]
 
+
     todo = []
-    tryo = [robot]
+    nps = [robot]
     do_move = False
+
+    dbg()
+    print(f"Move {d} {iii}:")
+
     while True:
-        if any((np[0]+dx,np[1]+dy) in walls for np in tryo):
+        tmp = set()
+        for np in nps:
+            np = (np[0]+dx,np[1]+dy)
+            tmp.add(np)
+            if d == '^' or d == 'v':
+                if boxes.get(np) == '[':
+                    tmp.add((np[0]+1,np[1]))
+                if boxes.get(np) == ']':
+                    tmp.add((np[0]-1,np[1]))
+        nps = tmp
+        print(f"{nps=}")
+        if any(np in walls for np in nps):
             do_move = False
-            #print("walled")
             break
-        elif any((np[0]+dx,np[1]+dy) in boxes for np in tryo):
-            nps = set()
-            for np in tryo:
-                nps.add((np[0]+dx,np[1]+dy))
-                if d == '^' or d == 'v':
-                    if boxes.get((np[0]+dx,np[1]+dy)) == '[':
-                        nps.add((np[0]+dx+1,np[1]+dy))
-                    elif boxes.get((np[0]+dx,np[1]+dy)) == ']':
-                        nps.add((np[0]+dx-1,np[1]+dy))
+        elif any(np in boxes for np in nps):
+            tmp=[]
             for np in nps:
                 if np in boxes:
                     todo.append((np,boxes[np]))
-            tryo = nps
-            #print(f"{tryo=}")
-            #print(f"{todo=}")
-        else: # all empty space
+                    tmp.append(np)
+            nps = tmp
+        else:
             do_move = True
-            #print(f"all empty")
             break
 
     if do_move:
         robot = (robot[0]+dx,robot[1]+dy)
         assert len(todo)%2 == 0
+        if (len(todo) > 0):
+            print(f"Move {d} {todo}")
         for box, v in todo:
             del boxes[box]
         for box, v in todo:
@@ -94,7 +102,6 @@ for iii,d in enumerate(dirs):
 
     if len(todo) > 0:
         print(f"Move {d} {iii}:")
-        print(todo)
         dbg()
 
 print("FINISH")
