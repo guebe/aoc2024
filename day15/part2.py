@@ -39,7 +39,7 @@ def dbg():
     for y in range(rows):
         for x in range(cols):
             if (x,y) in walls:
-                print(f'#', end='')
+                print('#', end='')
             elif (x,y) == robot:
                 print('@', end='')
             elif (x,y) in boxes:
@@ -49,15 +49,16 @@ def dbg():
         print()
     print()
 
-for iii,d in enumerate(dirs):
+#print("Initial state:")
+#dbg()
+
+for d in dirs:
     assert d in directions
     dx,dy = directions[d]
-
 
     todo = []
     nps = [robot]
     do_move = False
-
     while True:
         tmp = set()
         for np in nps:
@@ -79,7 +80,7 @@ for iii,d in enumerate(dirs):
                     todo.append((np,boxes[np]))
                     tmp.append(np)
             nps = tmp
-        else:
+        else: # empty space
             do_move = True
             break
 
@@ -91,6 +92,9 @@ for iii,d in enumerate(dirs):
         for box, v in todo:
             boxes[(box[0]+dx,box[1]+dy)] = v
 
+    #print(f"Move {d}:")
+    #dbg()
+
 #dbg()
 total = 0
 for (x,y),v in boxes.items():
@@ -99,3 +103,8 @@ for (x,y),v in boxes.items():
 
 print(total)
 
+
+
+
+
+    
