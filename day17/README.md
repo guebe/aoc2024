@@ -10,8 +10,8 @@ a disassembler. This was also simple.
 Now comes the hard part. Undoing the algorithm to find
 all possible input register values to produce the given 
 program output.
-Using manual analyzation of the program code I reversed
-the code. The reversed algorithm probes the possible
+Using manual analyzation of the program code I inversed
+the code. The inverse algorithm probes the possible
 output of the A register (there are more possibilities
 going in the other direction) - this was also the reason
 it was hard.
