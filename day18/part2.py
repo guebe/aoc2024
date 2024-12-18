@@ -49,8 +49,8 @@ def search(start, end, walls):
 
     return -1
 
-dbg(coords)
-print(search(start, end, coords[0:1024]))
+#dbg(coords)
+#print(search(start, end, coords[0:1024]))
 
 print(len(coords))
 print(search(start, end, coords[0:3450])) #-1
@@ -67,10 +67,18 @@ print(search(start, end, coords[0:2908])) #-1
 print(search(start, end, coords[0:2907]))
 print(coords[2907])
 
-#lower = 0
-#upper = len(coords)
-#while True:
-#    r1 = search(start, end, coords[0:upper])
-#    if r1 == -1:
-#        pass
+def binary_search(coords):
+    lower = 0
+    upper = len(coords)
+    while True:
+        probe = lower + (upper - lower)//2
+        res = search(start, end, coords[0:probe])
+        print(f"{probe} -> {res}")
+        if upper - lower == 1: return lower
     
+        if res == -1:
+            upper = probe
+        else:
+            lower = probe
+
+print(coords[binary_search(coords)])
