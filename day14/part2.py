@@ -61,7 +61,8 @@ for i in range(10000000):
         tmp.append(p)
 
     points = tmp
-    score = ebe_score(points)
+
+    score = ebe_score(set(points))
     print(f"{i+1} {score}")
     if (score > 300):
         vis(i)
