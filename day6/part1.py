@@ -1,4 +1,4 @@
-grid = open(0).read().splitlines()
+grid = list(map(list, open(0).read().splitlines()))
 
 ROW = len(grid)
 COL = len(grid[0])
