@@ -29,40 +29,21 @@ def get_regions(coordinates, patch):
                     grid[ny][nx] = '$'
                     stack.append(next_point)
 
-def count_x_top(line, region):
+def get_sides(region):
     count = 0
-    for i, (x, y) in enumerate(line):
+    for x, y in region:
         # a top side line AND (previous not there OR previous no top side line)
         if (x,y-1) not in region and ((x-1,y) not in region or (x-1,y-1) in region):
             count += 1
         # a bottom side line AND (previous not there OR previous no bottom side line)
         if (x,y+1) not in region and ((x-1,y) not in region or (x-1,y+1) in region):
             count += 1
-    return count
-
-def count_y_top(row, region):
-    count = 0
-    for i, (x, y) in enumerate(row):
         # a left side row AND (previous not there OR previous no left side row)
         if (x-1,y) not in region and ((x,y-1) not in region or (x-1,y-1) in region):
             count += 1
         # a right side row AND (previous not there OR previous no right side row)
         if (x+1,y) not in region and ((x,y-1) not in region or (x+1,y-1) in region):
             count += 1
-    return count
-
-def get_sides(region):
-    count = 0
-    for y in range(SZ):
-        line = []
-        row = []
-        for x in range(SZ):
-            if (x,y) in region:
-                line.append((x,y))
-            if (y,x) in region:
-                row.append((y,x))
-        count += count_x_top(line, region)
-        count += count_y_top(row, region)
     return count
 
 for r in range(SZ):
