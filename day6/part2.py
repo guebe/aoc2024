@@ -49,13 +49,10 @@ def is_endless(grid, pos, visited=None):
 
 visited = set() # store visited positions
 assert is_endless(grid, pos, visited) == False
-print(len(visited))
+visited.remove(pos) # remove guards starting position
 
-# remove guards starting position - this is not allowed
-visited.remove(pos)
-
-# add wall on all previously visited paths
 t = 0
+
 for r, c in visited:
     grid[r][c] = '#' # modify line
     if (is_endless(grid, pos)):
