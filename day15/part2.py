@@ -17,8 +17,10 @@ for y,line in enumerate(field):
             pass
         elif char == 'O':
             boxes.add((x*2,y))
+            boxes.add((x*2+1,y))
         elif char == '#':
             walls.add((x*2,y))
+            walls.add((x*2+1,y))
         elif char == '@':
             assert robot == None
             robot=(x*2,y)
@@ -38,14 +40,10 @@ def dbg():
         for x in range(cols):
             if (x,y) in walls:
                 print('#', end='')
-            elif (x-1,y) in walls:
-                print('#', end='')
             elif (x,y) == robot:
                 print('@', end='')
             elif (x,y) in boxes:
-                print('[', end='')
-            elif (x-1,y) in boxes:
-                print(']', end='')
+                print('O', end='')
             else:
                 print('.', end='')
         print()
@@ -63,13 +61,11 @@ for d in dirs:
     do_move = False
     while True:
         np = (np[0]+dx,np[1]+dy)
-        if np in walls or (np[0]+dx,np[1]) in walls:
+        if np in walls:
             do_move = False
             break
-        elif np in boxes in boxes:
+        elif np in boxes:
             todo.append(np)
-        elif (np[0]+dx,np[1]) in boxes:
-            todo.append((np[0]+dx,np[1]))
         else: # empty space
             do_move = True
             break
