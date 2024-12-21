@@ -61,6 +61,6 @@ ip=0
 A,B,C=[27334280,0,0]
 while True:
     if ip >= len(program):
-        exit()
+        break
     instr[program[ip]](program[ip+1])
 
