@@ -37,11 +37,11 @@ def count_x_top(line, region):
         assert y == last_y
         if (x,y-1) not in region: # a top line start counting
             # previous not there or if previous not also a top line
-            if (x-1,y) not in region or not((x-1,y) in region and (x-1,y-1) not in region):
+            if (x-1,y) not in region or (x-1,y-1) in region:
                 count += 1
         if (x,y+1) not in region: # a bottom line start counting
             # previous not there or if previous not also a bottom line
-            if (x-1,y) not in region or not((x-1,y) in region and (x-1,y+1) not in region):
+            if (x-1,y) not in region or (x-1,y+1) in region:
                 count += 1
         last_x = x
     return count
@@ -54,11 +54,11 @@ def count_y_top(line, region):
         assert y >= last_y
         if (x-1,y) not in region: # a left line start counting
             # previous not there or if previous not also a left line
-            if (x,y-1) not in region or not((x,y-1) in region and (x-1,y-1) not in region):
+            if (x,y-1) not in region or (x-1,y-1) in region:
                 count += 1
         if (x+1,y) not in region: # a right line start counting
             # previous not there or if previous not also a right line
-            if (x,y-1) not in region or not((x,y-1) in region and (x+1,y-1) not in region):
+            if (x,y-1) not in region or (x+1,y-1) in region:
                 count += 1
         last_x = x
     return count
