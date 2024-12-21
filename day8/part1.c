@@ -1,42 +1,25 @@
 #include <assert.h>
 #include <stdio.h>
-#include <string.h>
 #include "input.h"
 #define MAX 1024
-struct point { int r; int c; };
+struct point { int x; int y; };
+static struct point antenna[MAX];
+static char antinode[SZ][SZ];
+static inline int in_bounds(struct point p) { return p.x >= 0 && p.y >= 0 && p.x < SZ && p.y < SZ; }
+static inline struct point sub(struct point p1, struct point p2) { return (struct point){.x = p1.x - p2.x, .y = p1.y - p2.y }; }
+static inline struct point add(struct point p1, struct point p2) { return (struct point){.x = p1.x + p2.x, .y = p1.y + p2.y }; }
+static inline int is_valid(struct point p) { return (in_bounds(p) && antinode[p.y][p.x] != '#') ? (antinode[p.y][p.x] = '#', 1) : 0; }
 int main(void) {
-	static struct point antenna[MAX];
-	static char antinodes[SZ][SZ];
-	int t = 0;
-
-	for (char j = '.'+1; j <= 'z'; j++) {
-		int i = 0;
-		for (int r = 0; r < SZ; r++) for (int c = 0; c < SZ; c++) if (grid[r][c] == j) {
-			assert(i < MAX);
-			antenna[i] = (struct point){.r=r, .c=c};
-			i++;
+	int result = 0;
+	for (char c = '0'; c <= 'z'; c++) { /* all possible frequencies */
+		int cnt = 0;
+		for (int y = 0; y < SZ; y++) for (int x = 0; x < SZ; x++) if (grid[y][x] == c) {
+			assert(cnt < MAX); antenna[cnt++] = (struct point){.x=x, .y=y}; /* build a list of same-frequency antennas */
 		}
-		if (i > 0) printf("%c\n", j);
-		for (int k = 0; k < i; k++) { printf("(%d, %d)\n", antenna[k].r, antenna[k].c); }
-		for (int k = 0; k < i-1; k++) for (int l = k+1; l < i; l++) {
-			printf("%d %d\n", k, l);
-			struct point a1 = antenna[k];
-			struct point a2 = antenna[l];
-			int dr = a1.r - a2.r;
-			int dc = a1.c - a2.c;
-			struct point n1 = (struct point){.r = a1.r + dr, .c = a1.c + dc};
-			struct point n2 = (struct point){.r = a2.r - dr, .c = a2.c - dc};
-			printf("(%d, %d), (%d, %d) delta %d %d -> (%d, %d) (%d, %d)\n", a1.r, a1.c, a2.r, a2.c, dr, dc, n1.r, n1.c, n2.r, n2.c);
-			if (n1.r >= 0 && n1.c >= 0 && n1.r < SZ && n1.c < SZ) {
-				if (antinodes[n1.r][n1.c] != '#') t++;
-				antinodes[n1.r][n1.c] = '#';
-			}
-			if (n2.r >= 0 && n2.c >= 0 && n2.r < SZ && n2.c < SZ) {
-				if (antinodes[n2.r][n2.c] != '#') t++;
-				antinodes[n2.r][n2.c] = '#';
-			}
+		for (int i = 0; i < cnt-1; i++) for (int j = i+1; j < cnt; j++) {
+			struct point a1 = antenna[i], a2 = antenna[j], delta = sub(a1, a2); /* calc delta for all antenna pairs */
+			result += is_valid(add(a1, delta)) + is_valid(sub(a2, delta)); /* increase result by valid antinodes */
 	       	}
        	}
-	printf("%d\n", t);
-	return 0;
+	printf("%d\n", result); return 0;
 }
