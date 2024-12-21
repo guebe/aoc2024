@@ -30,57 +30,39 @@ def get_regions(coordinates, patch):
                     stack.append(next_point)
 
 def count_x_top(line, region):
-    last_x, last_y = line[0]
     count = 0
     for i, (x, y) in enumerate(line):
-        assert x >= last_x
-        assert y == last_y
         # a top side line AND (previous not there OR previous no top side line)
         if (x,y-1) not in region and ((x-1,y) not in region or (x-1,y-1) in region):
             count += 1
         # a bottom side line AND (previous not there OR previous no bottom side line)
         if (x,y+1) not in region and ((x-1,y) not in region or (x-1,y+1) in region):
             count += 1
-        last_x = x
     return count
 
-def count_y_top(line, region):
-    last_x, last_y = line[0]
+def count_y_top(row, region):
     count = 0
-    for i, (x, y) in enumerate(line):
-        assert x == last_x
-        assert y >= last_y
-        # a left side line AND (previous not there OR previous no left side line)
+    for i, (x, y) in enumerate(row):
+        # a left side row AND (previous not there OR previous no left side row)
         if (x-1,y) not in region and ((x,y-1) not in region or (x-1,y-1) in region):
             count += 1
-        # a right side line AND (previous not there OR previous no right side line)
+        # a right side row AND (previous not there OR previous no right side row)
         if (x+1,y) not in region and ((x,y-1) not in region or (x+1,y-1) in region):
             count += 1
-        last_x = x
     return count
 
 def get_sides(region):
-    #print(f"region {region}")
     count = 0
     for y in range(SZ):
         line = []
+        row = []
         for x in range(SZ):
             if (x,y) in region:
                 line.append((x,y))
-        if line:
-            cnt = count_x_top(line, region)
-            #print(f"line {line} count {cnt}")
-            count += cnt
-    for x in range(SZ):
-        row = []
-        for y in range(SZ):
-            if (x,y) in region:
-                row.append((x,y))
-        if row:
-            cnt = count_y_top(row, region)
-            #print(f"row {line} count {cnt}")
-            count += cnt
-    #print(f"count {count}")
+            if (y,x) in region:
+                row.append((y,x))
+        count += count_x_top(line, region)
+        count += count_y_top(row, region)
     return count
 
 for r in range(SZ):
