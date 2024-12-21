@@ -20,7 +20,7 @@ int main(void) {
 			struct point a1 = antenna[i], a2 = antenna[j], delta = sub(a1, a2); /* calc delta for all antenna pairs */
 			do result += is_antinode(a1); while (in_bounds(a1 = add(a1, delta))); /* add antinodes until oob */
 			do result += is_antinode(a2); while (in_bounds(a2 = sub(a2, delta))); /* sub antinodes until oob */
-	       	}
-       	}
+		}
+	}
 	printf("%d\n", result); return 0;
 }
