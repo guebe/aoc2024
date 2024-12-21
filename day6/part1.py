@@ -1,68 +1,48 @@
-
 a = open(0).read().splitlines()
-
-pos = 0
 
 ROW = len(a)
 COL = len(a[0])
 
+# determine initial position
+pos = 0
 for r in range(ROW):
     for c in range(COL):
         if "^" == a[r][c]:
             pos = (r, c)
 
-guard = a[pos[0]][pos[1]]
+def get_delta(direction):
+    if direction == '^':
+        return (-1,0)
+    elif direction == '>':
+        return (0,1)
+    elif direction == '<':
+        return (0,-1)
+    elif direction == 'v':
+        return (1,0)
 
-def get_delta(guard):
-    if guard == '^':
-        delta=(-1,0)
-    if guard == '>':
-        delta=(0,1)
-    if guard == '<':
-        delta=(0,-1)
-    if guard == 'v':
-        delta=(1,0)
-    return delta
-
-def turn_right(guard):
-    if guard == '^':
+def turn_right(direction):
+    if direction == '^':
         return '>'
-    if guard == '>':
+    elif direction == '>':
         return 'v'
-    if guard == '<':
+    elif direction == '<':
         return '^'
-    if guard == 'v':
+    elif direction == 'v':
         return '<'
 
-delta=get_delta(guard)
-import sys
-print(guard)
-print(pos)
-print(delta)
-
-t=0
-
-m = set()
+direction = a[pos[0]][pos[1]] # initial direction
+visited = set() # store visited positions
 
 while(True):
+    delta = get_delta(direction)
     npos = (pos[0]+delta[0],pos[1]+delta[1])
-    print(pos)
-    if npos[0] >= ROW or npos[1] >= COL or npos[1] < 0 or npos[0] < 0:
-        break
-    if "#" == a[npos[0]][npos[1]]:
-        guard = turn_right(guard)
-        delta=get_delta(guard)
-        print(guard)
-        print(pos)
-        print(delta)
+    if npos[0] >= ROW or npos[1] >= COL or npos[0] < 0 or npos[1] < 0:
+        break # left grid
+    elif "#" == a[npos[0]][npos[1]]:
+        direction = turn_right(direction) # turn
     else:
-        pos = npos
-        m.add(pos)
-        t += 1
+        pos = npos # move in current direction
+        visited.add(pos)
 
-print(len(m))
-
-
-
-
+print(len(visited))
 
