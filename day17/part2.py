@@ -1,4 +1,4 @@
-def out(A):
+def out(A): # this is just a manually simplified formula of the disassembler output
     B = (A%8)^2
     return (B ^ 7 ^ (A>>B)) % 8
 
