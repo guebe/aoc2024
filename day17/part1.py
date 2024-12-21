@@ -1,4 +1,3 @@
-instr=dict()
 def combo(op):
     global A,B,C,ip
     if 0<=op<=3: return op
@@ -10,38 +9,45 @@ def adv(op):
     global A,B,C,ip
     A=A//pow(2,combo(op))
     ip+=2
+
 def bxl(op):
     global A,B,C,ip
     B=B^op
     ip+=2
+
 def bst(op):
     global A,B,C,ip
     B=combo(op)%8
     ip+=2
+
 def jnz(op):
     global A,B,C,ip
     if A==0:
         ip+=2
         return
     ip=op
+
 def bxc(op):
     global A,B,C,ip
     B=B^C
     ip+=2
+
 def out(op):
     global A,B,C,ip
     print(f"{combo(op)%8},",end='')
     ip+=2
+
 def bdv(op):
     global A,B,C,ip
-   #A=A//pow(2,combo(op))
     B=A//pow(2,combo(op))
     ip+=2
+
 def cdv(op):
     global A,B,C,ip
     C=A//pow(2,combo(op))
     ip+=2
 
+instr=dict()
 instr[0]=adv
 instr[1]=bxl
 instr[2]=bst
@@ -55,7 +61,6 @@ ip=0
 A,B,C=[27334280,0,0]
 while True:
     if ip >= len(program):
-        #print(f"A: {A} B: {B} C: {C} ip: {ip}")
         exit()
     instr[program[ip]](program[ip+1])
 
