@@ -32,19 +32,9 @@ import sys
 #print(file)
 
 def find_free(filelen):
-    for i, x in enumerate(disk):
-        if x is None:
-            j = i
-            freelen = 1
-            while (freelen != filelen):
-                j += 1
-                if (j == len(disk)):
-                    break
-                if (disk[j] is None):
-                    freelen+=1
-                else:
-                    break
-            if (freelen == filelen):
+    for i in range(len(disk)-filelen):
+        if disk[i] is None:
+            if all(x is None for x in disk[i:i+filelen]):
                 return i
     return None
 
