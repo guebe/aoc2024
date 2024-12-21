@@ -39,5 +39,5 @@ left not in region or left not in region or top-left in region
 now apply commutativity of or:
 left not in region or top-left in region
 
-The same can be done for all other four directions!
+The same can be done for all other directions!
 ```
