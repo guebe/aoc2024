@@ -1,21 +1,17 @@
 from collections import defaultdict
-import sys
 
-lines = open(0).read().splitlines()
+file = open(0) # file object simplifies parsing of sectioned data file
 
-order = defaultdict(list)
+order = defaultdict(list) # creates an empty list by default
 updates = []
-i = 0
-for line in lines:
-    if line == '':
-        i+=1
-        continue
+for line in file:
+    if line.isspace():
+        break
+    o = list(map(int, line.split('|'))) # ATTENTION: map to int ASAP
+    order[o[0]].append(o[1])
 
-    if i == 0:
-        o = line.split('|')
-        order[o[0]].append(o[1])
-    else:
-        updates.append(line.split(','))
+for line in file:
+    updates.append(list(map(int, line.split(',')))) # ATTENTION: map to int ASAP
 
 def is_ordered(update):
     for i, first in enumerate(update):
