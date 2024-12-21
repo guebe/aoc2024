@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include "input.h"
-#define MAX 1024
+#define MAX 16
 struct point { int x; int y; };
 static struct point antenna[MAX];
 static char antinode[SZ][SZ];
