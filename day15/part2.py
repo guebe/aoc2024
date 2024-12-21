@@ -49,9 +49,6 @@ def dbg():
         print()
     print()
 
-print("Initial state:")
-dbg()
-
 for iii,d in enumerate(dirs):
     assert d in directions
     dx,dy = directions[d]
@@ -60,9 +57,6 @@ for iii,d in enumerate(dirs):
     todo = []
     nps = [robot]
     do_move = False
-
-    dbg()
-    print(f"Move {d} {iii}:")
 
     while True:
         tmp = set()
@@ -75,7 +69,6 @@ for iii,d in enumerate(dirs):
                 if boxes.get(np) == ']':
                     tmp.add((np[0]-1,np[1]))
         nps = tmp
-        print(f"{nps=}")
         if any(np in walls for np in nps):
             do_move = False
             break
@@ -93,27 +86,16 @@ for iii,d in enumerate(dirs):
     if do_move:
         robot = (robot[0]+dx,robot[1]+dy)
         assert len(todo)%2 == 0
-        if (len(todo) > 0):
-            print(f"Move {d} {todo}")
         for box, v in todo:
             del boxes[box]
         for box, v in todo:
             boxes[(box[0]+dx,box[1]+dy)] = v
 
-    if len(todo) > 0:
-        print(f"Move {d} {iii}:")
-        dbg()
-
-print("FINISH")
-dbg()
+#dbg()
 total = 0
-for x,y in boxes:
-    total += (y*100 + x)
+for (x,y),v in boxes.items():
+    if v == '[':
+        total += (y*100 + x)
 
 print(total)
 
-
-
-
-
-    
