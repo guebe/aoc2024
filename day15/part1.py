@@ -3,9 +3,7 @@ lines = open(0).read()
 
 field, dirs = lines.split('\n\n')
 field = field.split('\n')
-dirs = dirs.strip('\n')
-print(field)
-print(dirs)
+dirs = ''.join(dirs.strip('\n').split('\n'))
 
 boxes = set()
 walls = set()
@@ -27,24 +25,30 @@ for y,line in enumerate(field):
         else:
             assert False
 
-print(robot)
-print(walls)
-print(boxes)
+#print(field)
+#print(dirs)
+#print(robot)
+#print(walls)
+#print(boxes)
 
-directions = { '^': (0,1), 'v': (0,-1), '>': (1,0), '<': (-1,0) }
+directions = { '^': (0,-1), 'v': (0,1), '>': (1,0), '<': (-1,0) }
 
 def dbg():
     for y in range(rows):
         for x in range(cols):
             if (x,y) in walls:
                 print('#', end='')
-            elif (x,y) in robot:
+            elif (x,y) == robot:
                 print('@', end='')
             elif (x,y) in boxes:
                 print('O', end='')
             else:
                 print(' ', end='')
         print()
+    print()
+
+#print("Initial state:")
+#dbg()
 
 for d in dirs:
     assert d in directions
@@ -68,8 +72,13 @@ for d in dirs:
         robot = (robot[0]+dx,robot[1]+dy)
         for box in todo:
             boxes.remove(box)
+        for box in todo:
             boxes.add((box[0]+dx,box[1]+dy))
 
+    #print(f"Move {d}:")
+    #dbg()
+
+dbg()
 total = 0
 for x,y in boxes:
     total += (y*100 + x)

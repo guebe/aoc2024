@@ -52,7 +52,7 @@ def ebe_score(points):
 
 print(len(points))
 
-for i in range(10000000):
+for i in range(10000):
 
     tmp = []
 
@@ -64,8 +64,7 @@ for i in range(10000000):
 
     score = ebe_score(set(points))
     print(f"{i+1} {score}")
-    if (score > 300):
+    if (score > 500):
         vis(i)
-        break
 
 
